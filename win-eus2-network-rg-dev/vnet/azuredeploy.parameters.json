@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworks_vnet_name": {
+            "value": "win_eus2_vnet-dev"
+        },
+        "virtualNetworks_vnet_address": {
+            "value": "10.7.0.0/16"
+        },
+        "virtualNetworks_subnet1_name": {
+            "value": "Servers"
+        },
+        "virtualNetworks_subnet1_address": {
+            "value": "10.7.10.0/24"
+        },
+        "virtualNetworks_subnet2_name": {
+            "value": "Citrix-Servers"
+        },
+        "virtualNetworks_subnet2_address": {
+            "value": "10.7.13.0/24"
+        },
+        "virtualNetworks_subnet3_name": {
+            "value": "Data"
+        },
+        "virtualNetworks_subnet3_address": {
+            "value": "10.7.12.0/24"
+        }
+    }
+}

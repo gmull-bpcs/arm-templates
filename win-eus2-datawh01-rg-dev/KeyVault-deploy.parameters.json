@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaults_enterprise_kv_dev_name": {
+            "value": "datawh01a-kv-dev"
+        },
+        "kv_sku_name": {
+            "value": "Standard"
+        },
+        "location": {
+            "value":"eastus2"
+        }
+    }
+}

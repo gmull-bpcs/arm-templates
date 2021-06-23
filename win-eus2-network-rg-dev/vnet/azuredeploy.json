@@ -1,0 +1,89 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworks_vnet_name": {
+            "defaultValue": "vnet_eastus2",
+            "type": "String"
+        },
+        "virtualNetworks_vnet_address": {
+            "defaultValue": "10.0.0.0/16",
+            "type": "String"
+        },
+
+        "virtualNetworks_subnet1_name": {
+            "defaultValue": "subnet1",
+            "type": "String"
+        },
+        "virtualNetworks_subnet1_address": {
+            "defaultValue": "10.0.0.0/24",
+            "type": "String"
+        },
+        "virtualNetworks_subnet2_name": {
+            "defaultValue": "subnet2",
+            "type": "String"
+        },
+        "virtualNetworks_subnet2_address": {
+            "defaultValue": "10.0.1.0/24",
+            "type": "String"
+        },
+        "virtualNetworks_subnet3_name": {
+            "defaultValue": "subnet3",
+            "type": "String"
+        },
+        "virtualNetworks_subnet3_address": {
+            "defaultValue": "10.0.2.0/24",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-08-01",
+            "name": "[parameters('virtualNetworks_vnet_name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('virtualNetworks_vnet_address')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[parameters('virtualNetworks_subnet1_name')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('virtualNetworks_subnet1_address')]",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "[parameters('virtualNetworks_subnet2_name')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('virtualNetworks_subnet2_address')]",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "[parameters('virtualNetworks_subnet3_name')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('virtualNetworks_subnet3_address')]",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false
+            }
+        }
+    ]
+}

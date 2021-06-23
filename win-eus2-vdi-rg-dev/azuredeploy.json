@@ -1,0 +1,260 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "string"
+        },
+        "environmentName": {
+            "defaultValue": "Development",
+            "type": "string",
+            "allowedValues": ["Development", "Production"]
+        },
+        "virtualMachineName": {
+            "defaultValue": "win10ent-vm01",
+            "type": "string"
+        },
+        "virtualMachineComputerName": {
+            "defaultValue": "win10ent-vdi01",
+            "type": "string"
+        },
+        "virtualMachineOS": {
+            "defaultValue": "Windows-10",
+            "type": "string"  
+        },
+        "virtualMachineOSSku": {
+            "defaultValue": "21h1-ent-g2",
+            "type": "string"  
+        },
+        "osDiskType": {
+            "defaultValue": "Premium_LRS",
+            "type": "string"
+        },
+        "virtualMachineSize": {
+            "defaultValue": "Standard_D2as_v4",
+            "type": "string",
+            "allowedValues": [
+                "Standard_B2ms",
+                "Standard_D2as_v4"]
+        },
+        "patchMode": {
+            "defaultValue": "AutomaticByOS",
+            "type": "string"
+        },
+        "enableHotpatching": {
+            "defaultValue": false,
+            "type": "bool"
+        },
+        "virtualNetworkResourceGroupName": {
+            "defaultValue": "[resourceGroup().name]",
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "defaultValue": "vdi_vnet",
+            "type": "string"
+        },
+        "subnetName": {
+            "defaultValue": "default",
+            "type": "string"
+        },
+        "networkInterfaceName": {
+            "defaultValue": "win10ent-vm01-nic01",
+            "type": "String"
+        },
+        "publicIPAddressesName": {
+            "defaultValue": "win-vdi01",
+            "type": "String"
+        },
+        "publicIpAddressType": {
+            "defaultValue": "Dynamic",
+            "type": "string"
+        },
+        "publicIpAddressSku": {
+            "defaultValue": "Basic",
+            "type": "string"
+        },
+        "networkSecurityGroupName": {
+            "defaultValue": "gmull-labs-access-nsg",
+            "type": "String"
+        },
+        "networkSecurityGroupRules": {
+            "type": "array"
+        },
+        "autoShutdownStatus": {
+            "defaultValue": "Enabled",
+            "type": "String",
+            "allowedValues": ["Enabled", "Disabled"]
+        },
+        "autoShutdownTime": {
+            "defaultValue": "19:00",
+            "type": "String"
+        },
+        "autoShutdownTimeZone": {
+            "defaultValue": "UTC",
+            "type": "String"
+        },
+        "autoShutdownNotificationStatus": {
+            "defaultValue": "Enabled",
+            "type": "String"
+        },
+        "autoShutdownNotificationLocale": {
+            "defaultValue": "en",
+            "type": "string"
+        },
+        "autoShutdownNotificationEmail": {
+            "type": "string"
+        },
+        "adminUsername": {
+            "type": "string"
+        },
+        "adminPassword": {
+            "type": "secureString"
+        }
+    },
+    "variables": {
+        "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+        "vnetId": "[
+            concat('/subscriptions/', 
+            subscription().subscriptionId, 
+            '/resourceGroups/', 
+            parameters('virtualNetworkResourceGroupName') ,
+            '/providers/Microsoft.Network/virtualNetworks/' ,
+            parameters('virtualNetworkName'))
+            ]",
+        "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('networkInterfaceName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-10-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIPAddressesName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIpAddress": {
+                                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIPAddressesName'))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[variables('nsgId')]"
+                }
+            }
+        },
+        {
+            "name": "[parameters('networkSecurityGroupName')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2019-02-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "securityRules": "[parameters('networkSecurityGroupRules')]"
+            }
+        },
+        {
+            "name": "[parameters('publicIPAddressesName')]",
+            "type": "Microsoft.Network/publicIpAddresses",
+            "apiVersion": "2019-02-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+            },
+            "sku": {
+                "name": "[parameters('publicIpAddressSku')]"
+            }
+        },
+                {
+            "name": "[parameters('virtualMachineName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2021-03-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('osDiskType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsDesktop",
+                        "offer": "[parameters('virtualMachineOS')]",
+                        "sku": "[parameters('virtualMachineOSSku')]",
+                        "version": "latest"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineComputerName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "enableAutomaticUpdates": true,
+                        "provisionVmAgent": true,
+                        "patchSettings": {
+                            "enableHotpatching": "[parameters('enableHotpatching')]",
+                            "patchMode": "[parameters('patchMode')]"
+                        }
+                    }
+                },
+                "licenseType": "Windows_Client",
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            },
+            "identity": {
+                "type": "systemAssigned"
+            }
+        },
+        {
+            "name": "[concat('shutdown-computevm-', parameters('virtualMachineName'))]",
+            "type": "Microsoft.DevTestLab/schedules",
+            "apiVersion": "2018-09-15",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
+            ],
+            "properties": {
+                "status": "[parameters('autoShutdownStatus')]",
+                "taskType": "ComputeVmShutdownTask",
+                "dailyRecurrence": {
+                    "time": "[parameters('autoShutdownTime')]"
+                },
+                "timeZoneId": "[parameters('autoShutdownTimeZone')]",
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]",
+                "notificationSettings": {
+                    "status": "[parameters('autoShutdownNotificationStatus')]",
+                    "notificationLocale": "[parameters('autoShutdownNotificationLocale')]",
+                    "timeInMinutes": "30",
+                    "emailRecipient": "[parameters('autoShutdownNotificationEmail')]"
+                }
+            }
+        }
+    ]
+}

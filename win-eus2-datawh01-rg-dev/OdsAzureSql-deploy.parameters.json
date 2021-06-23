@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "servers_sql_server_name": {
+            "value": "datawh01a-kv-dev"
+        },
+        "storageAccounts_name": {
+            "value": "sqldatawh01storagedev"
+        },
+        "sqlAdminLogin":{
+            "value":"loginAdmin"
+        },
+        "sqlDbSKUServiceObjective": {
+            "value":"S0"
+        },
+        "sqlDbSKUEdition":{
+            "value":"Standard"
+        },
+        "sqlAdminLoginPassword": {
+            "reference": {
+                "keyVault": {
+                "id": "/subscriptions/dfe3b320-4738-4405-b370-287c5574de48/resourceGroups/win-eus2-datawh01-rg-dev/providers/Microsoft.KeyVault/vaults/datawh01-kv-dev"
+                },
+                "secretName": "secret-sql-datawh-admin-pwd"
+            }
+        },
+        "location": {
+            "value":"eastus2"
+        }
+    }
+  }

@@ -1,0 +1,103 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineName": {
+            "value": "win10ent-vm01"
+        },
+        "virtualMachineComputerName": {
+            "value": "AWINVDI01"
+        },
+        "osDiskType": {
+            "value": "Premium_LRS"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_D2as_v4"
+        },
+        "patchMode": {
+            "value": "AutomaticByOS"
+        },
+        "enableHotpatching": {
+            "value": false
+        },
+        "networkInterfaceName": {
+            "value": "win10ent-vm01-nic01"
+        },
+        "publicIPAddressesName": {
+            "value": "win-vdi-vm01"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
+        },
+        "networkSecurityGroupName": {
+            "value": "win-vdi-nsg"
+        },
+        "networkSecurityGroupRules": {
+            "value": [
+                {
+                    "name": "AllowAllInboundTrafficFromGMULLLabs",
+                    "properties": {
+                        "priority": 100,
+                        "protocol": "*",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefix": "69.148.244.178/32",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "*"
+                    }
+                },
+                {
+                    "name": "default-allow-rdp",
+                    "properties": {
+                        "priority": 1000,
+                        "protocol": "TCP",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "3389"
+                    }
+                }
+            ]
+        },
+        "virtualNetworkResourceGroupName": {
+            "value": "win-eus2-network-rg-dev"
+        },
+        "virtualNetworkName": {
+            "value": "win_eus2_vnet-dev"
+        },
+        "subnetName": {
+            "value": "Citrix-Servers"
+        },
+        "adminUsername": {
+            "value": "devops"
+        },
+        "adminPassword": {
+            "value": "Changeme123!#"
+        },
+        "autoShutdownStatus": {
+            "value": "Enabled"
+        },
+        "autoShutdownTime": {
+            "value": "19:00"
+        },
+        "autoShutdownTimeZone": {
+            "value": "UTC"
+        },
+        "autoShutdownNotificationStatus": {
+            "value": "Enabled"
+        },
+        "autoShutdownNotificationLocale": {
+            "value": "en"
+        },
+        "autoShutdownNotificationEmail": {
+            "value": "gmull@bpcs.com"
+        }
+    }
+}
