@@ -9,41 +9,37 @@
         "environmentName": {
             "defaultValue": "Development",
             "type": "string",
-            "allowedValues": [ "Development", "Production" ]
+            "allowedValues": ["Development", "Production"]
         },
         "virtualMachineName": {
-            "defaultValue": "azuredinfraops01",
+            "defaultValue": "azuredtruxwebxx",
             "type": "string"
         },
         "virtualMachineComputerName": {
-            "defaultValue": "ADINFRAOPS01",
+            "defaultValue": "azuredtruxwebxx",
             "type": "string"
         },
         "virtualMachineOS": {
-            "defaultValue": "Windows-10",
-            "type": "string"
+            "defaultValue": "WindowsServer",
+            "type": "string"  
         },
         "virtualMachineOSSku": {
-            "defaultValue": "21h1-ent-g2",
+            "defaultValue": "2019-Datacenter",
             "type": "string",
             "allowedValues": [
-                "2004-ent-g2",
-                "20h2-ent-g2",
-                "21h1-ent-g2"
-            ]
+                "2019-Datacenter"]
         },
         "osDiskType": {
             "defaultValue": "Premium_LRS",
             "type": "string"
         },
         "virtualMachineSize": {
-            "defaultValue": "Standard_D2as_v4",
+            "defaultValue": "Standard_B2s",
             "type": "string",
             "allowedValues": [
-                "Standard_B2ms",
-                "Standard_D2as_v4",
-                "Standard_F4s_v2"
-            ]
+                "Standard_B2s",
+                "Standard_A2_v2",
+                "Standard_F2s_v2"]
         },
         "patchMode": {
             "defaultValue": "AutomaticByOS",
@@ -58,7 +54,7 @@
             "type": "string"
         },
         "virtualNetworkName": {
-            "defaultValue": "vdi_vnet",
+            "defaultValue": "trux_vnet",
             "type": "string"
         },
         "subnetName": {
@@ -66,11 +62,23 @@
             "type": "string"
         },
         "networkInterfaceName": {
-            "defaultValue": "azuredinfraops-nic01",
+            "defaultValue": "azuredtruxwebxx-nic01",
             "type": "String"
         },
+        "publicIPAddressesName": {
+            "defaultValue": "azuredtruxwebxx-ip01",
+            "type": "String"
+        },
+        "publicIpAddressType": {
+            "defaultValue": "Dynamic",
+            "type": "string"
+        },
+        "publicIpAddressSku": {
+            "defaultValue": "Basic",
+            "type": "string"
+        },
         "networkSecurityGroupName": {
-            "defaultValue": "win-eus2-infraops-nsg",
+            "defaultValue": "gmull-labs-access-nsg",
             "type": "String"
         },
         "networkSecurityGroupRules": {
@@ -79,7 +87,7 @@
         "autoShutdownStatus": {
             "defaultValue": "Enabled",
             "type": "String",
-            "allowedValues": [ "Enabled", "Disabled" ]
+            "allowedValues": ["Enabled", "Disabled"]
         },
         "autoShutdownTime": {
             "defaultValue": "19:00",
@@ -154,7 +162,8 @@
                 "securityRules": "[parameters('networkSecurityGroupRules')]"
             }
         },
-        {
+
+                {
             "name": "[parameters('virtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2021-03-01",
@@ -174,7 +183,7 @@
                         }
                     },
                     "imageReference": {
-                        "publisher": "MicrosoftWindowsDesktop",
+                        "publisher": "MicrosoftWindowsServer",
                         "offer": "[parameters('virtualMachineOS')]",
                         "sku": "[parameters('virtualMachineOSSku')]",
                         "version": "latest"

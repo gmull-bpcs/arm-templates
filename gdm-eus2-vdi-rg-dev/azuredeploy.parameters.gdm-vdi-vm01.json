@@ -3,16 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "virtualMachineName": {
-            "value": "azuredinfraops01"
+            "value": "win10ent-vm01"
         },
         "virtualMachineComputerName": {
-            "value": "ADINFRAOPS01"
+            "value": "AWINVDI01"
         },
         "osDiskType": {
             "value": "Premium_LRS"
         },
         "virtualMachineSize": {
-            "value": "Standard_D2as_v4"
+            "value": "Standard_F4s_v2"
         },
         "patchMode": {
             "value": "AutomaticByOS"
@@ -21,26 +21,32 @@
             "value": false
         },
         "networkInterfaceName": {
-            "value": "azuredinfraops-nic01"
+            "value": "win10ent-vm01-nic01"
+        },
+        "publicIPAddressesName": {
+            "value": "gdm-vdi-vm01"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
         },
         "networkSecurityGroupName": {
-            "value": "win-eus2-infraops-dev-nsg"
+            "value": "gdm-vdi-nsg"
         },
         "networkSecurityGroupRules": {
             "value": [
                 {
-                    "name": "Allow-RDP",
+                    "name": "AllowAllInboundTrafficFromGMULLLabs",
                     "properties": {
-                        "priority": 1000,
-                        "protocol": "TCP",
+                        "priority": 100,
+                        "protocol": "*",
                         "access": "Allow",
                         "direction": "Inbound",
                         "sourceApplicationSecurityGroups": [],
                         "destinationApplicationSecurityGroups": [],
-                        "sourceAddressPrefix": "10.7.0.0/16,10.5.0.0/16",
+                        "sourceAddressPrefix": "69.148.244.178/32",
                         "sourcePortRange": "*",
                         "destinationAddressPrefix": "*",
-                        "destinationPortRange": "3389"
+                        "destinationPortRange": "*"
                     }
                 }
             ]

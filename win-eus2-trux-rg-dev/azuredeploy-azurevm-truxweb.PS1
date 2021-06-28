@@ -1,7 +1,8 @@
-$resourceGroup = "win-eus2-vdi-rg-dev"
+$resourceGroup = "win-eus2-trux-rg-dev"
 $location = "East US2"
-$templateFile = ".\azuredeploy.json"
-$parameterFile = ".\azuredeploy.parameters.json"
+$templateFile = ".\azuredeploy-azurevm-truxweb.json"
+$parameterFile = ".\azuredeploy.azurevm.parameters.truxweb.json"
+$deploymentName = 'deployAzureVMTruxWebSvr'
 
 # Check if Resource Group Exists
 Get-AzResourceGroup -Name $resourceGroup -ErrorVariable notPresent -ErrorAction SilentlyContinue
@@ -18,7 +19,7 @@ else
 
 # Deploy ARM Template
 New-AzResourceGroupDeployment `
-  -Name deployVDI `
+  -Name $deploymentName `
   -ResourceGroupName $resourceGroup `
   -TemplateFile $templateFile `
   -TemplateParameterFile $parameterFile

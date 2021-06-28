@@ -1,7 +1,7 @@
-$resourceGroup = "win-eus2-vdi-rg-dev"
+$resourceGroup = "gdm-eus2-vdi-rg-dev"
 $location = "East US2"
 $templateFile = ".\azuredeploy.json"
-$parameterFile = ".\azuredeploy.parameters.json"
+$parameterFile = ".\azuredeploy.parameters.gdm-vdi-vm01.json"
 
 # Check if Resource Group Exists
 Get-AzResourceGroup -Name $resourceGroup -ErrorVariable notPresent -ErrorAction SilentlyContinue
@@ -18,7 +18,7 @@ else
 
 # Deploy ARM Template
 New-AzResourceGroupDeployment `
-  -Name deployVDI `
+  -Name deployGMVDIVM01 `
   -ResourceGroupName $resourceGroup `
   -TemplateFile $templateFile `
   -TemplateParameterFile $parameterFile

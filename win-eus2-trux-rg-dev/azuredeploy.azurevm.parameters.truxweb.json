@@ -3,16 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "virtualMachineName": {
-            "value": "azuredinfraops01"
+            "value": "azuredtruxweb01"
         },
         "virtualMachineComputerName": {
-            "value": "ADINFRAOPS01"
+            "value": "AZUREDTRUXWEB01"
         },
         "osDiskType": {
             "value": "Premium_LRS"
         },
         "virtualMachineSize": {
-            "value": "Standard_D2as_v4"
+            "value": "Standard_B2s"
         },
         "patchMode": {
             "value": "AutomaticByOS"
@@ -21,29 +21,19 @@
             "value": false
         },
         "networkInterfaceName": {
-            "value": "azuredinfraops-nic01"
+            "value": "azuredtruxweb01-nic01"
+        },
+        "publicIPAddressesName": {
+            "value": "azuredtruxweb01"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
         },
         "networkSecurityGroupName": {
-            "value": "win-eus2-infraops-dev-nsg"
+            "value": "azuredtruxweb01-nsg"
         },
         "networkSecurityGroupRules": {
-            "value": [
-                {
-                    "name": "Allow-RDP",
-                    "properties": {
-                        "priority": 1000,
-                        "protocol": "TCP",
-                        "access": "Allow",
-                        "direction": "Inbound",
-                        "sourceApplicationSecurityGroups": [],
-                        "destinationApplicationSecurityGroups": [],
-                        "sourceAddressPrefix": "10.7.0.0/16,10.5.0.0/16",
-                        "sourcePortRange": "*",
-                        "destinationAddressPrefix": "*",
-                        "destinationPortRange": "3389"
-                    }
-                }
-            ]
+            "value": []
         },
         "virtualNetworkResourceGroupName": {
             "value": "win-eus2-network-rg-dev"
@@ -52,7 +42,7 @@
             "value": "win_eus2_vnet-dev"
         },
         "subnetName": {
-            "value": "Citrix-Servers"
+            "value": "Servers"
         },
         "adminUsername": {
             "value": "devops"

@@ -9,19 +9,19 @@
         "environmentName": {
             "defaultValue": "Development",
             "type": "string",
-            "allowedValues": [ "Development", "Production" ]
+            "allowedValues": ["Development", "Production"]
         },
         "virtualMachineName": {
-            "defaultValue": "azuredinfraops01",
+            "defaultValue": "win10ent-vm01",
             "type": "string"
         },
         "virtualMachineComputerName": {
-            "defaultValue": "ADINFRAOPS01",
+            "defaultValue": "win10ent-vdi01",
             "type": "string"
         },
         "virtualMachineOS": {
             "defaultValue": "Windows-10",
-            "type": "string"
+            "type": "string"  
         },
         "virtualMachineOSSku": {
             "defaultValue": "21h1-ent-g2",
@@ -29,8 +29,7 @@
             "allowedValues": [
                 "2004-ent-g2",
                 "20h2-ent-g2",
-                "21h1-ent-g2"
-            ]
+                "21h1-ent-g2"]
         },
         "osDiskType": {
             "defaultValue": "Premium_LRS",
@@ -42,8 +41,7 @@
             "allowedValues": [
                 "Standard_B2ms",
                 "Standard_D2as_v4",
-                "Standard_F4s_v2"
-            ]
+                "Standard_F4s_v2"]
         },
         "patchMode": {
             "defaultValue": "AutomaticByOS",
@@ -66,11 +64,23 @@
             "type": "string"
         },
         "networkInterfaceName": {
-            "defaultValue": "azuredinfraops-nic01",
+            "defaultValue": "win10ent-vm01-nic01",
             "type": "String"
         },
+        "publicIPAddressesName": {
+            "defaultValue": "win-vdi01",
+            "type": "String"
+        },
+        "publicIpAddressType": {
+            "defaultValue": "Dynamic",
+            "type": "string"
+        },
+        "publicIpAddressSku": {
+            "defaultValue": "Basic",
+            "type": "string"
+        },
         "networkSecurityGroupName": {
-            "defaultValue": "win-eus2-infraops-nsg",
+            "defaultValue": "gmull-labs-access-nsg",
             "type": "String"
         },
         "networkSecurityGroupRules": {
@@ -79,7 +89,7 @@
         "autoShutdownStatus": {
             "defaultValue": "Enabled",
             "type": "String",
-            "allowedValues": [ "Enabled", "Disabled" ]
+            "allowedValues": ["Enabled", "Disabled"]
         },
         "autoShutdownTime": {
             "defaultValue": "19:00",
@@ -126,7 +136,8 @@
             "apiVersion": "2018-10-01",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]"
+                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIPAddressesName'))]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -136,7 +147,10 @@
                             "subnet": {
                                 "id": "[variables('subnetRef')]"
                             },
-                            "privateIPAllocationMethod": "Dynamic"
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIpAddress": {
+                                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIPAddressesName'))]"
+                            }
                         }
                     }
                 ],
@@ -155,6 +169,18 @@
             }
         },
         {
+            "name": "[parameters('publicIPAddressesName')]",
+            "type": "Microsoft.Network/publicIpAddresses",
+            "apiVersion": "2019-02-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+            },
+            "sku": {
+                "name": "[parameters('publicIpAddressSku')]"
+            }
+        },
+                {
             "name": "[parameters('virtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2021-03-01",
